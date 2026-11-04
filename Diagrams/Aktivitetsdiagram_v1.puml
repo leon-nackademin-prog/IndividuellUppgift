@@ -1,0 +1,25 @@
+start
+
+repeat
+  :Ange inventarienummer;
+
+  if (Är inventarienumret giltigt?) then ([JA])
+    :Sök efter exemplaret;
+
+    if (Finns exemplaret i systemet?) then ([JA])
+      :Visa exemplarsuppgifter;
+      :Personal väljer exemplar;
+      :Lämna över valt exemplar till nästa funktion (US-01);
+      stop
+    else ([NEJ])
+      :Visa felmeddelande: "Exemplaret hittades inte";
+    endif
+
+  else ([NEJ])
+    :Visa felmeddelande: "Inte giltigt inventarienummer";
+  endif
+
+repeat while (Vill personalen söka igen?) is ([JA]) not ([NEJ])
+end
+
+@enduml

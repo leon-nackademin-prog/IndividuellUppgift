@@ -1,0 +1,39 @@
+@startuml
+title Söka fram inventarienummer
+
+actor "Användare" as User
+boundary "View" as View
+control "EquipmentService" as EquipmentService
+entity "EquipmentRepository" as EquipmentRepository
+
+loop Tills formatet är giltigt
+User -> View : Skriver in inventarienummer
+View -> EquipmentService : SearchItem(inventarienummer)
+activate EquipmentService
+
+EquipmentService -> EquipmentService : ValidateSearch()
+
+alt Formatet är ogiltigt
+  EquipmentService --> View : Ogiltig sökning
+  View --> User : Visar felmeddelande: "Inte giltigt inventarienummer. Försök igen?"
+end
+end
+
+EquipmentService -> EquipmentRepository : GetItemByInventoryNumber(inventarienummer)
+EquipmentRepository -> EquipmentRepository : GetAllItems()
+EquipmentRepository -> EquipmentRepository : FirstOrDefault(x => x.InventoryNumber == inventarienummer)
+activate EquipmentRepository
+
+alt Exemplaret hittades inte
+  EquipmentRepository --> EquipmentService : null
+  EquipmentService --> View : Exemplaret hittades inte
+  View --> User : Visar felmeddelande: "Exemplaret hittades inte"
+else Exemplaret hittades
+EquipmentRepository --> EquipmentService : EquipmentItem
+deactivate EquipmentRepository
+EquipmentService --> View : EquipmentItem
+deactivate EquipmentService
+View --> User : Visar exemplarsinfo (inventarienummer, modellnamn, aktuell status)
+end
+
+@enduml
