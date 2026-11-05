@@ -44,6 +44,7 @@ EquipmentItem? ShowMenu()
             {
                 if (!AskToRetry())
                 {
+                    Console.WriteLine("Sökningen avslutas.");
                     return null;
                 }
             }
@@ -58,6 +59,7 @@ EquipmentItem? ShowMenu()
 
             if (!AskToRetry())
             {
+                Console.WriteLine("Sökningen avslutas.");
                 return null;
             }
         }
