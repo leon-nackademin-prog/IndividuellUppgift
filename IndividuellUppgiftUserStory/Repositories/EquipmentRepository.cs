@@ -2,7 +2,7 @@
 
 namespace IndividuellUppgiftUserStory.Repositories;
 
-public class EquipmentRepository
+public class EquipmentRepository : IEquipmentRepository
 {
     private readonly List<EquipmentItem> _equipmentItems = new List<EquipmentItem>();
 

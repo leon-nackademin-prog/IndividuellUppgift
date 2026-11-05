@@ -4,14 +4,14 @@ using System.Text.RegularExpressions;
 
 namespace IndividuellUppgiftUserStory.Services;
 
-public partial class EquipmentService
+public partial class EquipmentService : IEquipmentService
 {
-    private readonly EquipmentRepository _repository;
+    private readonly IEquipmentRepository _repository;
 
     [GeneratedRegex(@"\A[0-9]{5,7}\z")]
     private static partial Regex InventoryNumberPattern();
 
-    public EquipmentService(EquipmentRepository repository)
+    public EquipmentService(IEquipmentRepository repository)
     {
         _repository = repository;
     }
