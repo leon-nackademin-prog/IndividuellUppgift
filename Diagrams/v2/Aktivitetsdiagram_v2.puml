@@ -1,0 +1,47 @@
+@startuml
+title Söka fram och identifiera ett exemplar
+legend right
+Fylld cirkel = lyckat slut
+Cirkel med kryss = avbruten sökning
+end legend
+
+start
+
+repeat
+    :Ange inventarienummer;
+
+    if (Är inventarienumret giltigt?) then (Ja)
+        :Sök efter exemplaret;
+
+        if (Finns exemplaret i systemet?) then (Ja)
+            :Visa exemplarsuppgifter;
+            note right
+              Inventarienummer
+              Modellnamn
+              Aktuell status
+            end note
+            
+            
+
+            if (Vill personalen välja exemplaret?) then (Ja)
+                :Returnera valt exemplar;
+                stop
+            else (Nej)
+                
+            endif
+
+        else (Nej)
+            :Visa felmeddelande "Exemplaret hittades inte";
+            :Fråga om personalen vill söka igen;
+        endif
+
+    else (Nej)
+        :Visa felmeddelande:
+        "Ogiltigt inventarienummer";
+        :Fråga om personalen vill försöka igen;
+    endif
+
+repeat while (Vill personalen söka igen?) is (Ja) not (Nej)
+
+end
+@enduml
