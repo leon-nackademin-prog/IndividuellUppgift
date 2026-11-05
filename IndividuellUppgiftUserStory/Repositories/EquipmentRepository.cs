@@ -5,7 +5,7 @@ namespace IndividuellUppgiftUserStory.Repositories;
 public class EquipmentRepository
 {
     private readonly List<EquipmentItem> _equipmentItems = new List<EquipmentItem>();
-
+    //lägg till testobjekt i listan
 
     public EquipmentItem? GetItem(string inventoryNumber)
     {
