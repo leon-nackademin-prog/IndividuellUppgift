@@ -9,8 +9,6 @@ public class Searchviewtests
 {
     private readonly EquipmentRepository _repository = new EquipmentRepository();
 
-    // Hjälpmetod: kör dialogen med färdiga svar (en rad = ett Enter-tryck)
-    // och returnerar både resultatet och allt som skrevs ut.
     private (EquipmentItem? Result, string Output) RunView(string input, IEquipmentService? service = null)
     {
         var output = new StringWriter();
@@ -23,10 +21,6 @@ public class Searchviewtests
 
         return (result, output.ToString());
     }
-
-    // ------------------------------------------------------------------
-    // HUVUDFLÖDE: sök, hittad, personalen väljer exemplaret
-    // ------------------------------------------------------------------
 
     [Fact]
     public void ShowMenu_FoundAndConfirmed_ReturnsSelectedItem()
@@ -54,14 +48,14 @@ public class Searchviewtests
         _repository.GetAllItems().Add(new EquipmentItem("999999", model, isUnavailable: true));
 
         var (_, output) = RunView("999999\nJ\n");
-
-        Assert.Contains("Otillgänglig True", output);
+        
+        Assert.Contains("Status: Otillgänglig", output);
     }
 
     [Theory]
-    [InlineData("123456\nj\n")]       // gemener
-    [InlineData(" 123456 \nJ\n")]     // blanksteg runt numret trimmas
-    [InlineData("123456\n J \n")]     // blanksteg runt svaret trimmas
+    [InlineData("123456\nj\n")]     
+    [InlineData(" 123456 \nJ\n")]     
+    [InlineData("123456\n J \n")]     
     public void ShowMenu_InputIsTrimmedAndCaseInsensitive_StillSelectsItem(string input)
     {
         var (result, _) = RunView(input);
@@ -69,10 +63,6 @@ public class Searchviewtests
         Assert.NotNull(result);
         Assert.Equal("123456", result!.InventoryNumber);
     }
-
-    // ------------------------------------------------------------------
-    // ALTERNATIVT FLÖDE: ogiltigt format
-    // ------------------------------------------------------------------
 
     [Fact]
     public void ShowMenu_InvalidFormatThenNo_ShowsErrorAndEndsSearch()
@@ -93,10 +83,6 @@ public class Searchviewtests
         Assert.Equal("123456", result!.InventoryNumber);
     }
 
-    // ------------------------------------------------------------------
-    // ALTERNATIVT FLÖDE: exemplaret finns inte
-    // ------------------------------------------------------------------
-
     [Fact]
     public void ShowMenu_NotFoundThenNo_ShowsErrorAndEndsSearch()
     {
@@ -115,9 +101,6 @@ public class Searchviewtests
         Assert.Equal("1110000", result!.InventoryNumber);
     }
 
-    // ------------------------------------------------------------------
-    // ALTERNATIVT FLÖDE: personalen avböjer att välja exemplaret
-    // ------------------------------------------------------------------
 
     [Fact]
     public void ShowMenu_DeclineSelectionThenNo_EndsSearch()
@@ -136,10 +119,6 @@ public class Searchviewtests
 
         Assert.Equal("1110000", result!.InventoryNumber);
     }
-
-    // ------------------------------------------------------------------
-    // ÖVRIGA GRENAR I KODEN (finns inte i sekvensdiagrammet)
-    // ------------------------------------------------------------------
 
     [Fact]
     public void ShowMenu_InvalidChoiceOnSelectQuestion_ShowsMessageAndRestartsSearch()
@@ -175,10 +154,6 @@ public class Searchviewtests
         Assert.Null(result);
     }
 
-    // ------------------------------------------------------------------
-    // SAMVERKAN VIEW -> SERVICE (med fake-service)
-    // ------------------------------------------------------------------
-
     private class FakeService : IEquipmentService
     {
         public List<string> ReceivedInputs { get; } = new();
@@ -198,7 +173,6 @@ public class Searchviewtests
 
         RunView("  123456  \nJ\n999\nN\n", fake);
 
-        // Första sökningen -> misslyckas -> J -> andra sökningen -> misslyckas -> N
         Assert.Equal(new[] { "123456", "999" }, fake.ReceivedInputs);
     }
 
@@ -213,5 +187,14 @@ public class Searchviewtests
         var (_, output) = RunView("123456\nN\n", fake);
 
         Assert.Contains("Meddelande från servicen", output);
+    }
+
+    [Fact]
+    public void ShowMenu_SelectingItem_DoesNotChangeStatus()
+    {
+        var (result, _) = RunView("123456\nJ\n");
+
+        Assert.False(result!.IsUnavailable);
+        Assert.Equal(3, _repository.GetAllItems().Count);
     }
 }

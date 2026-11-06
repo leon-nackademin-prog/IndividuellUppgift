@@ -11,3 +11,8 @@ SearchView view = new SearchView(service, Console.In, Console.Out);
 
 EquipmentItem? selectedItem = view.ShowMenu();
 
+if (selectedItem != null)
+{
+    Console.WriteLine($"Exemplar {selectedItem.InventoryNumber} lämnas vidare till \"Markera som otillgängligt\".");
+}
+

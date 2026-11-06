@@ -34,7 +34,8 @@ public class SearchView
                 _output.WriteLine("Exemplaret hittades!");
                 _output.WriteLine($"Inventarienummer: {result.Item!.InventoryNumber}");
                 _output.WriteLine($"Modell: {result.Item.Model.Name}");
-                _output.WriteLine($"Otillgänglig {result.Item.IsUnavailable}");
+                string status = result.Item.IsUnavailable ? "Otillgänglig" : "Tillgänglig";
+                _output.WriteLine($"Status: {status}");
 
                 _output.WriteLine("\nVill du välja exemplaret? J/N");
 

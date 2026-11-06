@@ -1,0 +1,92 @@
+@startuml
+autonumber
+hide footbox
+title Söka fram och identifiera ett exemplar
+
+actor "Personal" as User
+
+box "Inventariesystemet"
+boundary "View" as View
+control "EquipmentService" as EquipmentService
+entity "EquipmentRepository" as EquipmentRepository
+end box
+
+
+note over User, EquipmentRepository : break = flödet lämnar sökloopen
+
+loop Tills personalen väljer ett exemplar eller avslutar
+
+    User -> View : Personal skriver in inventarienummer \noch startar sökningen
+    activate View
+    View -> EquipmentService : SearchItem(inventoryNumber)
+
+    activate EquipmentService
+    EquipmentService -> EquipmentService : ValidateSearch()
+
+    alt Ogiltigt format
+        EquipmentService --> View : SearchResult(false, message)
+
+    else Giltigt format
+        EquipmentService -> EquipmentRepository : GetItem(inventoryNumber)
+
+        activate EquipmentRepository
+        note right of EquipmentRepository : Inventarienumret identifierar ett enskilt exemplar.
+        EquipmentRepository -> EquipmentRepository : GetAllItems()
+        EquipmentRepository -> EquipmentRepository : FirstOrDefault\n(x => x.InventoryNumber == inventoryNumber)
+        EquipmentRepository --> EquipmentService : item eller null
+        note right of EquipmentRepository : Endast läsning. Ingen status ändras.
+        deactivate EquipmentRepository
+
+        alt Exemplaret hittades inte
+            EquipmentService --> View : SearchResult(false, message)
+
+        else Exemplaret hittades
+            EquipmentService --> View : SearchResult(true, item)
+        end
+    end
+        deactivate EquipmentService      
+    alt Sökningen misslyckades
+        View --> User : Visar felmeddelande (message)
+        View --> User : Vill du söka igen? Ja/Nej
+
+        alt Personal väljer Ja
+            User -> View : Väljer Ja
+
+        else Personal väljer Nej
+            User -> View : Väljer Nej
+            break Avsluta sökningen
+                View --> User : Sökningen avslutas
+            end
+        end
+
+    else Sökningen lyckades
+        View --> User : Visar exemplarsinfo
+        View --> User : Vill du välja exemplaret? Ja/Nej
+
+        alt Personal bekräftar
+            User -> View : Väljer Ja
+            break Exemplar valt
+                View --> User : Exemplaret är valt \n(lämnas vidare till "Markera som otillgängligt")
+            end
+
+        else Personal avböjer
+            User -> View : Väljer Nej
+            View --> User : Vill du söka igen? Ja/Nej
+
+            alt Personal väljer Ja
+                User -> View : Väljer Ja
+
+            else Personal väljer Nej
+                User -> View : Väljer Nej
+                break Avsluta sökningen
+                    View --> User : Sökningen avslutas
+                deactivate View
+                end
+            end
+        end
+    end
+
+    
+end
+
+@enduml

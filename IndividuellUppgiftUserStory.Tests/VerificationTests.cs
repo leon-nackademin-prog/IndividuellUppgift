@@ -130,9 +130,10 @@ public class VerificationTests
     {
         List<EquipmentItem> items = _repository.GetAllItems();
 
-        Assert.Equal(2, items.Count);
+        Assert.Equal(3, items.Count);
         Assert.Contains(items, i => i.InventoryNumber == "123456");
         Assert.Contains(items, i => i.InventoryNumber == "1110000");
+        Assert.Contains(items, i => i.InventoryNumber == "123457");
     }
 
     private class FakeRepository : IEquipmentRepository
@@ -209,6 +210,32 @@ public class VerificationTests
 
         Assert.False(item.IsUnavailable);
         Assert.Null(item.UnavailabilityReason);
+    }
+
+    [Fact]
+    public void SearchItem_TwoItemsOfSameModel_ReturnsTheCorrectOne()
+    {
+        SearchResult a = _service.SearchItem("123456");
+        SearchResult b = _service.SearchItem("123457");
+
+        Assert.Same(a.Item!.Model, b.Item!.Model);   
+        Assert.NotSame(a.Item, b.Item);              
+        Assert.Equal("123457", b.Item.InventoryNumber);
+    }
+
+    [Fact]
+    public void SearchItem_DoesNotChangeItemStatusOrRepositoryContent()
+    {
+        EquipmentItem item = _repository.GetItem("123456")!;
+        bool statusBefore = item.IsUnavailable;
+        int countBefore = _repository.GetAllItems().Count;
+
+        _service.SearchItem("123456");
+        _service.SearchItem("654321");
+        _service.SearchItem("abc");
+
+        Assert.Equal(statusBefore, item.IsUnavailable);
+        Assert.Equal(countBefore, _repository.GetAllItems().Count);
     }
 }
 

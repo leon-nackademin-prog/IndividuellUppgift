@@ -23,10 +23,12 @@ public class EquipmentRepository : IEquipmentRepository
         return _equipmentItems;
     }
 
-    public void SeedTestData()
+    private void SeedTestData()
     {
         EquipmentModel model01 = new EquipmentModel("M01", "Borrmaskin", "Slagborrmaskin", "Verktyg", 150.00m);
         EquipmentItem item01 = new EquipmentItem("123456", model01);
+
+        EquipmentItem item03 = new EquipmentItem("123457", model01);
         
 
         EquipmentModel model02 = new EquipmentModel("M02", "Gaffeltruck", "en truck för transport", "Fordon", 25000.00m);
@@ -34,6 +36,7 @@ public class EquipmentRepository : IEquipmentRepository
 
         _equipmentItems.Add(item01);
         _equipmentItems.Add(item02);
+        _equipmentItems.Add(item03);
 
     }
     
