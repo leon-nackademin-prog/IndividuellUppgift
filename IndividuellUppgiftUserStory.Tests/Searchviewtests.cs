@@ -197,4 +197,12 @@ public class Searchviewtests
         Assert.False(result!.IsUnavailable);
         Assert.Equal(3, _repository.GetAllItems().Count);
     }
+
+    [Fact]
+    public void ShowMenu_FoundAvailableItem_ShowsAvailableStatus()
+    {
+        var (_, output) = RunView("123456\nJ\n");
+
+        Assert.Contains("Status: Tillgänglig", output);
+    }
 }
