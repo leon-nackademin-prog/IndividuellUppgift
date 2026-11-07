@@ -21,8 +21,8 @@ public class SearchView
 
         while (true)
         {
-            _output.WriteLine("### Sök efter exemplar###");
-            _output.WriteLine("### Ange inventarienummer:");
+            _output.WriteLine("### Sök efter exemplar ###");
+            _output.WriteLine("### Ange inventarienummer: ");
 
             string? input = _input.ReadLine()?.Trim();
 

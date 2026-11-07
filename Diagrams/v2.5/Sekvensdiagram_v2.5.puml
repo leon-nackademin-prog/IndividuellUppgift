@@ -66,8 +66,9 @@ loop Tills personalen väljer ett exemplar eller avslutar
         alt Personal bekräftar
             User -> View : Väljer Ja
             break Exemplar valt
-                View --> User : Exemplaret är valt \n(lämnas vidare till "Markera som otillgängligt")
+                View --> User : Exemplaret är valt
             end
+            note right of View: Det valda exemplaret returneras och \nlämnas vidare till "Markera som otillgängligt"
 
         else Personal avböjer
             User -> View : Väljer Nej

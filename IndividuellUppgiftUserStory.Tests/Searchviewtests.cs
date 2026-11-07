@@ -5,7 +5,7 @@ using IndividuellUppgiftUserStory.Views;
 
 namespace IndividuellUppgiftUserStory.Tests;
 
-public class Searchviewtests
+public class SearchViewTests
 {
     private readonly EquipmentRepository _repository = new EquipmentRepository();
 
