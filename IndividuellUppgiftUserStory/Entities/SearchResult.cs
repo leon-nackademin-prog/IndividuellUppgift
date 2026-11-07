@@ -7,7 +7,7 @@ public class SearchResult
 
     public EquipmentItem? Item { get; }
 
-    public SearchResult(bool success, string? message, EquipmentItem? item)
+    public SearchResult(bool success, string? message, EquipmentItem? item) 
     {
         Success = success;
         Message = message;

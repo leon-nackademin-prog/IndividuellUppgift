@@ -1,0 +1,67 @@
+@startuml
+title Söka fram och identifiera ett exemplar
+
+loop Tills personalen väljer ett exemplar eller avslutar
+
+actor "Personal" as User
+boundary "View" as View
+control "EquipmentService" as EquipmentService
+entity "EquipmentRepository" as EquipmentRepository
+
+    User -> View : Skriver in inventarienummer
+    View -> EquipmentService : SearchItem(inventarienummer)
+
+    activate EquipmentService
+    EquipmentService -> EquipmentService : ValidateSearch()
+
+    alt Ogiltigt format
+        EquipmentService --> View : SearchResult(false, "Ogiltigt inventarienummer")
+
+    else Giltigt format
+        EquipmentService -> EquipmentRepository : GetItemByInventoryNumber(inventarienummer)
+
+        activate EquipmentRepository
+        EquipmentRepository -> EquipmentRepository : GetAllItems()
+        EquipmentRepository -> EquipmentRepository : FirstOrDefault(x => x.InventoryNumber == inventarienummer)       
+        EquipmentRepository --> EquipmentService : item eller null
+        deactivate EquipmentRepository
+
+        alt Exemplaret hittades inte
+            EquipmentService --> View : SearchResult(false, "Exemplaret hittades inte")
+
+        else Exemplaret hittades
+            EquipmentService --> View : SearchResult(true, item)
+        end
+    end
+
+    alt Sökningen misslyckades
+        View --> User : Visar felmeddelande (message)
+        View --> User : Vill du försöka igen? Ja/Nej
+
+        alt Personal väljer Ja
+            User -> View : Väljer Ja
+        else Personal väljer Nej
+            User -> View : Väljer Nej
+            break Avsluta sökningen
+            end
+        end
+
+    else Sökningen lyckades
+        View --> User : Visar exemplarsinfo
+        View --> User : Vill du välja exemplaret? Ja/Nej
+
+        alt Personal bekräftar
+            User -> View : Väljer Ja
+            View -> EquipmentService : SelectItem(item)
+            EquipmentService --> View : Valet bekräftat
+            break Exemplar valt
+            end
+
+        else Personal avböjer
+            User -> View : Väljer Nej
+        end
+    end
+
+    deactivate EquipmentService
+end
+@enduml

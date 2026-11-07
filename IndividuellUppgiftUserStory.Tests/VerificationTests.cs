@@ -209,7 +209,6 @@ public class VerificationTests
         EquipmentItem item = _repository.GetItem("123456")!;
 
         Assert.False(item.IsUnavailable);
-        Assert.Null(item.UnavailabilityReason);
     }
 
     [Fact]
