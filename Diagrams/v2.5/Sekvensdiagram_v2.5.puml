@@ -6,7 +6,7 @@ title Söka fram och identifiera ett exemplar
 actor "Personal" as User
 
 box "Inventariesystemet"
-boundary "View" as View
+boundary "SearchView" as View
 control "EquipmentService" as EquipmentService
 entity "EquipmentRepository" as EquipmentRepository
 end box
