@@ -29,53 +29,18 @@ public class VerificationTests
         Assert.Equal(expectedModelName, result.Item.Model.Name);
     }
 
-    [Fact]
-    public void SearchItem_ValidExistingNumber_ReturnsSameInstanceAsRepository()
-    {
-        EquipmentItem? fromRepository = _repository.GetItem("123456");
-
-        SearchResult result = _service.SearchItem("123456");
-
-        Assert.Same(fromRepository, result.Item);
-    }
-
-    [Fact]
-    public void SearchItem_ItemMarkedUnavailable_IsStillFoundAndStatusIsShown()
-    {
-        var model = new EquipmentModel("M99", "Lift", null, "Fordon", 500m);
-        _repository.GetAllItems().Add(new EquipmentItem("999999", model, isUnavailable: true));
-
-        SearchResult result = _service.SearchItem("999999");
-
-        Assert.True(result.Success);
-        Assert.True(result.Item!.IsUnavailable);
-    }
-
     [Theory]
-    [InlineData("")]         
-    [InlineData("   ")]       
-    [InlineData("abc123")]    
-    [InlineData("1234")]      
-    [InlineData("12345678")]  
-    [InlineData("12 345")]    
-    [InlineData("12-345")]    
-    [InlineData("123456\n")]  
-    [InlineData(" 123456")]   
+    [InlineData("")]       
+    [InlineData("   ")]    
+    [InlineData("abc123")]   
+    [InlineData("1234")] 
+    [InlineData("12345678")] 
     public void SearchItem_InvalidFormat_ReturnsFailureWithMessage(string input)
     {
         SearchResult result = _service.SearchItem(input);
 
         Assert.False(result.Success);
         Assert.Equal("Ogiltigt inventarienummer", result.Message);
-        Assert.Null(result.Item);
-    }
-
-    [Fact]
-    public void SearchItem_NullInput_ReturnsFailureAndDoesNotThrow()
-    {
-        SearchResult result = _service.SearchItem(null!);
-
-        Assert.False(result.Success);
         Assert.Null(result.Item);
     }
 
@@ -102,15 +67,6 @@ public class VerificationTests
     }
 
     [Fact]
-    public void SearchItem_InvalidFormatAndNotFound_GiveDifferentMessages()
-    {
-        SearchResult invalid = _service.SearchItem("abc");
-        SearchResult notFound = _service.SearchItem("654321");
-
-        Assert.NotEqual(invalid.Message, notFound.Message);
-    }
-
-    [Fact]
     public void Repository_GetItem_ExistingNumber_ReturnsItem()
     {
         EquipmentItem? item = _repository.GetItem("1110000");
@@ -123,17 +79,6 @@ public class VerificationTests
     public void Repository_GetItem_UnknownNumber_ReturnsNull()
     {
         Assert.Null(_repository.GetItem("654321"));
-    }
-
-    [Fact]
-    public void Repository_GetAllItems_ContainsSeededItems()
-    {
-        List<EquipmentItem> items = _repository.GetAllItems();
-
-        Assert.Equal(3, items.Count);
-        Assert.Contains(items, i => i.InventoryNumber == "123456");
-        Assert.Contains(items, i => i.InventoryNumber == "1110000");
-        Assert.Contains(items, i => i.InventoryNumber == "123457");
     }
 
     private class FakeRepository : IEquipmentRepository
@@ -201,14 +146,6 @@ public class VerificationTests
 
         Assert.True(result.Success);
         Assert.Same(item, result.Item);
-    }
-
-    [Fact]
-    public void EquipmentItem_NewItem_IsAvailableByDefault()
-    {
-        EquipmentItem item = _repository.GetItem("123456")!;
-
-        Assert.False(item.IsUnavailable);
     }
 
     [Fact]

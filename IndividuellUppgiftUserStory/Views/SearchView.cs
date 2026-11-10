@@ -79,7 +79,6 @@ public class SearchView
             _output.WriteLine("Vill du söka igen? J/N");
 
             string? decision = _input.ReadLine()?.Trim().ToUpper();
-
             if (decision == null)
             {
                 return false;

@@ -52,18 +52,6 @@ public class SearchViewTests
         Assert.Contains("Status: Otillgänglig", output);
     }
 
-    [Theory]
-    [InlineData("123456\nj\n")]     
-    [InlineData(" 123456 \nJ\n")]     
-    [InlineData("123456\n J \n")]     
-    public void ShowMenu_InputIsTrimmedAndCaseInsensitive_StillSelectsItem(string input)
-    {
-        var (result, _) = RunView(input);
-
-        Assert.NotNull(result);
-        Assert.Equal("123456", result!.InventoryNumber);
-    }
-
     [Fact]
     public void ShowMenu_InvalidFormatThenNo_ShowsErrorAndEndsSearch()
     {

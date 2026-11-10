@@ -30,17 +30,13 @@ Svara med `J` eller `N` på frågorna i programmet.
 
 ### Inventarienummer att testa med
 
-Nummer	| Resultat |
-
-`123456` | Borrmaskin
-
-`123457` | Borrmaskin (annat exemplar av samma modell)
-
-`1110000` | Gaffeltruck
-
-`654321` | Giltigt format, men exemplaret finns inte
-
-`abc` | Ogiltigt format
+| Nummer | Resultat |
+|---|---|
+| `123456` | Borrmaskin |
+| `123457` | Borrmaskin (annat exemplar av samma modell) |
+| `1110000` | Gaffeltruck |
+| `654321` | Giltigt format, men exemplaret finns inte |
+| `abc` | Ogiltigt format |
 
 Ett giltigt inventarienummer består av 5 till 7 siffror.
 
@@ -60,20 +56,15 @@ och skärm.
 
 ```
 IndividuellUppgift.slnx
+IndividuellUppgiftUserStory/         Konsolapplikationen (huvudprojektet)
+    Entities/                        EquipmentItem, EquipmentModel, SearchResult
+    Repositories/                    IEquipmentRepository, EquipmentRepository
+    Services/                        IEquipmentService, EquipmentService
+    Views/                           SearchView (dialogen med användaren)
+    Program.cs                       Kopplar ihop lagren och startar dialogen
 
-├─Projekt 1 Huvudprojekt─├
-IndividuellUppgiftUserStory/        Konsolapplikationen
-	Entities/                       EquipmentItem, EquipmentModel, SearchResult
-	Repositories/                   IEquipmentRepository, EquipmentRepository
-	Services/                       IEquipmentService, EquipmentService
-	Views/                          SearchView (dialogen med användaren)
-	Program.cs                      Kopplar ihop lagren och startar dialogen
-
-├─Projekt 2 Projektet för tester─├
-IndividuellUppgiftUserStory.Tests/  xUnit-tester
-
-├─Mappar utanför projekten─├
-Diagrams/                           Diagram i PlantUML (.puml) och bild (.png)
+IndividuellUppgiftUserStory.Tests/   xUnit-tester (testprojektet)
+Diagrams/                            Diagram i PlantUML (.puml) och bild (.png)
 ```
 
 ### Koppling mellan sekvensdiagram och kod
