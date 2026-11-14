@@ -1,0 +1,119 @@
+@startuml
+title Booking System - Class Diagram
+
+skinparam classAttributeIconSize 0
+skinparam class {
+ BackgroundColor #EFF6FF
+ BorderColor #475569
+ FontColor #1E293B
+}
+hide empty members
+
+class Program <<console>> {
++Main() void
++RegisterCustomer()
++IsCancellation()
++ShowCustomers()
+}
+
+class BookingService {
++CalculateTotalPrice(modelId: string,\n start: DateOnly, end: DateOnly): decimal
+  +CreateBooking(customerId: string, modelId: string,\n startDate: DateOnly, endDate: DateOnly): Booking?
+  +ConfirmBooking(customerId: string, modelId: string,\n start: DateOnly, end: DateOnly,\n acceptedPrice: decimal): Booking
+}
+
+class EquipmentService {
+  +GetAllModels(): List<EquipmentModel>
+  +GetModelById(modelId: string): EquipmentModel?
+  +GetItem(inventoryNumber: string): EquipmentItem?
+  +CreateBooking(customerId: string, modelId: string, startDate: DateOnly, endDate: DateOnly): Booking?
+  +MarkItemUnavailable(inventoryNumber: string, reason: string): void
+}
+
+class CustomerService {
+  +GetCustomer(customerId: string): Customer?
+  +GetBookings(customerId: string): List<Booking>
+  +RegisterCustomer(name: string, organizationNumber : string, email : string, phoneNumber : string): Customer
+}
+
+EquipmentService -[hidden]right- BookingService
+BookingService -[hidden]up- Program
+
+class Booking {
+  +InventoryNumber: string
+  +BookingNumber: string
+  +StartDate: DateOnly
+  +EndDate: DateOnly
+  +AgreedTotalPrice: decimal
+  +Cancel(): void
+}
+
+class EquipmentModel {
+  +Id: string
+  +Name: string
+  +Description: string
+  +Category: string
+  +DailyRate: decimal
+  +ChangeDailyRate(rate: decimal): void
+}
+
+class EquipmentItem {
+  +InventoryNumber: string
+  +IsUnavailable: bool
+  +UnavailabilityReason: string?
+  +MarkUnavailable(reason: string): void
+}
+
+class Customer {
+  +Id: string
+  +Name: string
+  +Email: string
+  +OrganizationNumber: string
+  +PhoneNumber: string
+}
+
+class BookingRepository {
+  +GetAllBookings(): List<Booking>
+  +AddBooking(booking: Booking): void 
+  +GetByNumber(bookingNumber: string): Booking?
+  +GetByCustomerId(customerId: string): List<Booking>
+  +TryReserveAndSave(booking: Booking): bool
+  +SaveChanges(booking: Booking): void
+}
+
+class EquipmentRepository {
+  +GetAllModels(): List<EquipmentModel>
+  +GetModelById(modelId: string): EquipmentModel?
+  +GetItem(inventoryNumber: string): EquipmentItem?
+  +SaveItem(item: EquipmentItem): void
+  +AddItem(item: EquipmentItem): void
+}
+
+class CustomerRepository {
+  +GetById(customerId: string): Customer?
+  +Save(customer : Customer) : void
+  +GetAll(): List <Customer>
+}
+
+
+BookingService ..> BookingRepository
+BookingService ..> CustomerRepository
+BookingService ..> EquipmentRepository
+BookingService ..> Booking
+CustomerService ..> CustomerRepository
+
+EquipmentItem "0..*" --> "1" EquipmentModel
+Customer "1" -- "0..*" Booking
+Booking "0..*" --> "1" EquipmentItem
+BookingRepository ..> Booking
+CustomerRepository ..> Customer
+EquipmentRepository ..> EquipmentItem
+EquipmentRepository ..> EquipmentModel
+CustomerService ..> Customer
+EquipmentService ..> EquipmentItem
+EquipmentService ..> EquipmentModel
+EquipmentService ..> EquipmentRepository
+Program ..> EquipmentService
+Program ..> BookingService
+Program ..> CustomerService
+@enduml

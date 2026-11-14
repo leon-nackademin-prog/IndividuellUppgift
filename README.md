@@ -84,6 +84,8 @@ Den gällande versionen är **v2.5** (mapp `Diagrams/v2.5`).
 
 ![Sekvensdiagram](Diagrams/v2.5/Sekvensdiagram_v2.5.png)
 
+![Klassdiagram](Diagrams/Klassdiagram/Klassdiagram_v2.5.png)
+
 De tidigare versionerna ligger kvar i `Diagrams/v1`, `Diagrams/v1.5` och
 `Diagrams/v2` för att visa hur designen ändrats.
 
